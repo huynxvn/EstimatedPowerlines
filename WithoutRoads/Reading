@@ -1,0 +1,64 @@
+import pandas as pd
+import numpy as np
+from math import sqrt
+from GreatCircle import *
+from statistics import mean
+import random
+df = pd.read_csv('C:/Users/user/Documents/SummerProject/ExtractedCairns/area1.csv', names = ['lon','lat'])
+
+def KNN(df,npoints = None,distfunc = None):
+    nentries = len(df)
+    converged = False
+
+
+    if not distfunc:
+        distfunc = lambda x: sqrt(x[0] ** 2 + x[1] ** 2)
+    if not npoints:
+        npoints = nentries//3
+
+
+    df['cluster'] = 1
+    bbox =  [max(df['lat']),max(df['lon']),min(df['lon']),min(df['lon'])]
+
+    #randomly select a centroid
+    centroids = [(random.uniform(bbox[0],bbox[2]),random.uniform(bbox[1],bbox[3])) for i in range(npoints)]
+
+
+    while True:
+
+        state = df['cluster'].tolist()
+        for index,row in df.iterrows():
+            row[2] = getNearest(centroids,(row[0],row[1]),distfunc)
+
+        for i in range(len(centroids)):
+            nearest = df.loc[df['cluster'] == i]
+            if len(nearest) == 0:
+                continue
+            centroids[i] = (mean(nearest['lon'].tolist()),mean(nearest['lat'].tolist()))
+
+        if state == df['cluster'].tolist():
+            break
+
+
+    return(centroids)
+
+    '''
+    while not converged:
+    
+        calculate nearest cluster
+        recalculate clusters
+        ## calculate nearest distance
+        for i in
+    '''
+def getNearest(centroids,point,distfunc):
+    nearest = 0
+    mindist = float('inf')
+
+    for index,centroid in enumerate(centroids):
+        if mindist>distfunc(centroid,point):
+            nearest = index
+
+            mindist = distfunc(centroid,point)
+
+    return(nearest)
+print(KNN(df,distfunc=great_circle_distance))

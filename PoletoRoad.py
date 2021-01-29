@@ -1,5 +1,12 @@
+
+
 import csv
 import numpy as np
+import os
+from Poles import *
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'Data/poles.csv')
 roads = []
 with open('C:/Users/user/Documents/SummerProject/ExtractedCairns/roads.csv', newline='') as f:
     reader = csv.reader(f)
@@ -24,7 +31,7 @@ for line in data:
 
 
 print(build_centroids)
-from Poles import *
+
 pole_output = candidates(roads)
 pole_output = cull(pole_output)
 print(pole_output.keys())
