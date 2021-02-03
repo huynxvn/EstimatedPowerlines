@@ -1,0 +1,15 @@
+import matplotlib.pyplot as plt
+connections = [((5, 50), (8, 8)), ((8, 8), (20, 10)), ((20, 10), (21, 9)), ((21, 9), (40, 10)), ((40, 10), (40, 20)), ((40, 10), (43, 20))]
+mypoints = [(20,10),(40,10),(43,20),(21,9),(40,20),(8,8),(5,50)]
+
+for pointPair in connections:
+
+        point1 = pointPair[0]
+        point2 = pointPair[1]
+
+        x_values = [point1[0], point2[0]]
+        y_values = [point1[1], point2[1]]
+
+        plt.plot(x_values, y_values)
+plt.plot(connections[0][0], connections[0][1], marker='o', markersize=3, color="green")
+plt.show()

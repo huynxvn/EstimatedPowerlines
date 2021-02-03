@@ -4,8 +4,10 @@ from math import sqrt
 from GreatCircle import *
 from statistics import mean
 import random
+from WithoutRoads.prims import *
 df = pd.read_csv('C:/Users/user/Documents/SummerProject/ExtractedCairns/area1.csv', names = ['lon','lat'])
 
+print(df.head())
 def KNN(df,npoints = None,distfunc = None):
     nentries = len(df)
     converged = False
@@ -18,11 +20,11 @@ def KNN(df,npoints = None,distfunc = None):
 
 
     df['cluster'] = 1
-    bbox =  [max(df['lat']),max(df['lon']),min(df['lon']),min(df['lon'])]
-
+    bbox =  [max(df['lon']),max(df['lat']),min(df['lon']),min(df['lat'])]
+    print(bbox)
     #randomly select a centroid
     centroids = [(random.uniform(bbox[0],bbox[2]),random.uniform(bbox[1],bbox[3])) for i in range(npoints)]
-
+    print(centroids)
 
     while True:
 
@@ -42,14 +44,7 @@ def KNN(df,npoints = None,distfunc = None):
 
     return(centroids)
 
-    '''
-    while not converged:
-    
-        calculate nearest cluster
-        recalculate clusters
-        ## calculate nearest distance
-        for i in
-    '''
+
 def getNearest(centroids,point,distfunc):
     nearest = 0
     mindist = float('inf')
@@ -61,4 +56,21 @@ def getNearest(centroids,point,distfunc):
             mindist = distfunc(centroid,point)
 
     return(nearest)
+
 print(KNN(df,distfunc=great_circle_distance))
+
+mylist = KNN(df,distfunc=great_circle_distance)
+
+connections = prims(mylist)
+
+for pointPair in connections:
+
+        point1 = pointPair[0]
+        point2 = pointPair[1]
+
+        x_values = [point1[0], point2[0]]
+        y_values = [point1[1], point2[1]]
+
+        plt.plot(x_values, y_values,color = 'red')
+plt.plot(connections[0][0][0], connections[0][0][1], marker='^', markersize=8, color="green")
+plt.show()

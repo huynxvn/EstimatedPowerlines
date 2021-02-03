@@ -1,8 +1,11 @@
 ##implementation of k nearest neighbours with great circle implemented
-
+from sklearn.cluster import KMeans
 from GreatCircle import *
 from math import sqrt
 import random
+
+
+
 def knn_greatcircle(df,npoints = None,distfunc = None):
     nentries = len(df)
     converged = False
@@ -21,9 +24,12 @@ def knn_greatcircle(df,npoints = None,distfunc = None):
     centroids = [(random.random(bbox[0],bbox[2]),random.random(bbox[1],bbox[3])) for i in range(npoints)]
     print(centroids)
     print(df.head())
-    return(0)
+    previous =
     '''
     while not converged:
         ## calculate nearest distance
         for i in
     '''
+    previous
+
+    while not

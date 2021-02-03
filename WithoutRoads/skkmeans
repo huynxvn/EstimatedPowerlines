@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+from WithoutRoads.prims import *
+features, true_labels = make_blobs(n_samples=200,centers=3,cluster_std=2.75,random_state=42)
+df = pd.read_csv('C:/Users/user/Documents/SummerProject/ExtractedCairns/area1.csv', names = ['lon','lat'])
+array = np.loadtxt(open('C:/Users/user/Documents/SummerProject/ExtractedCairns/area1.csv', "rb"), delimiter=",", skiprows=1)
+
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(array)
+kmeans = KMeans(n_clusters=35, init='k-means++', max_iter=300, n_init=10, random_state=0)
+
+pred_y = kmeans.fit(scaled_features)
+endcentroids = scaler.inverse_transform(kmeans.cluster_centers_)
+
+print(endcentroids[:5])
+print(array[:5])
+connections = prims([tuple(i) for i in endcentroids])
+
+
+
+for pointPair in connections:
+
+        point1 = pointPair[0]
+        point2 = pointPair[1]
+
+        x_values = [point1[0], point2[0]]
+        y_values = [point1[1], point2[1]]
+
+        plt.plot(x_values, y_values,color = 'red')
+plt.plot(connections[0][0][0], connections[0][0][1], marker='^', markersize=8, color="green")
+
+plt.scatter(endcentroids[:,0],endcentroids[:,1])
+plt.scatter(array[:,0],array[:,1],s = 4)
+
+plt.show()
