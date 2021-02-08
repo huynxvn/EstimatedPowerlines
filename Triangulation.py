@@ -6,13 +6,45 @@ import os
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'Data/poles.csv')
 
-data = pd.read_csv(filename)
 
-coords = data[['lon','lat']].to_numpy()
+def prims(vertices):
 
-cdd = {'vertices': coords}
+    unconnected = copy.copy(vertices)
+    connected = [unconnected.pop()]
+    print(connected)
+    print(unconnected)
+    connections = []
 
-t = tr.triangulate(cdd)
+    while unconnected:
+        print(connected)
+        smallest = float('inf')
+        candidate = ()
+        for index1,node1 in enumerate(connected):
+            for index2,node2 in enumerate(unconnected):
+
+                #find the smallest distance connection
+                print("node1",node1)
+                print("node2",node2)
+                if distance(node1,node2)<smallest:
+                    smallest = distance(node1,node2)
+                    candidate = (node1,node2)
+                    print("replaced")
+
+        #add the smallest distance to the graph
+        print("candidate is ")
+        print(candidate)
+        connections.append(candidate)
+        #remove node2 from unconnected
+        unconnected.remove(candidate[1])
+        connected.append(candidate[1])
+    print("connections ",connections)
+
+    return connections
+
+
+def distance(node1,node2):
+
+    return sqrt((node1[0]-node2[0])**2+(node1[1]-node2[1])**2)
 
 
 def getEdges(triangulation,df):
@@ -40,12 +72,29 @@ def getEdges(triangulation,df):
             else:
                 nodes.append(l)
 
-
     return nodes
 
-def createLinestring(lines,df):
-    
+data = pd.read_csv(filename)
+
+
+def Sort_Tuple(tup):
+    # reverse = None (Sorts in Ascending order)
+    # key is set to sort using second element of
+    # sublist lambda has been used
+    return (sorted(tup, key=lambda x: x[1]))
+print(data.shape)
+coords = data[['lon','lat']].to_numpy()
+
+cdd = {'vertices': coords}
+
+t = tr.triangulate(cdd)
+
+
 print(getEdges(t,data))
 print(t['triangles'])
-tr.plot(plt.axes(),**t)
-plt.show()
+#tr.plot(plt.axes(),**t)
+#plt.show()
+
+
+
+

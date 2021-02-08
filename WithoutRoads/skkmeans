@@ -5,6 +5,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 from WithoutRoads.prims import *
+
+
 features, true_labels = make_blobs(n_samples=200,centers=3,cluster_std=2.75,random_state=42)
 df = pd.read_csv('C:/Users/user/Documents/SummerProject/ExtractedCairns/area1.csv', names = ['lon','lat'])
 array = np.loadtxt(open('C:/Users/user/Documents/SummerProject/ExtractedCairns/area1.csv', "rb"), delimiter=",", skiprows=1)
@@ -37,3 +39,5 @@ plt.scatter(endcentroids[:,0],endcentroids[:,1])
 plt.scatter(array[:,0],array[:,1],s = 4)
 
 plt.show()
+
+
