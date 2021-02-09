@@ -8,33 +8,30 @@ def prims(vertices):
 
     unconnected = copy.copy(vertices)
     connected = [unconnected.pop()]
-    print(connected)
-    print(unconnected)
+
     connections = []
 
     while unconnected:
-        print(connected)
+
         smallest = float('inf')
         candidate = ()
         for index1,node1 in enumerate(connected):
             for index2,node2 in enumerate(unconnected):
 
                 #find the smallest distance connection
-                print("node1",node1)
-                print("node2",node2)
+
                 if distance(node1,node2)<smallest:
                     smallest = distance(node1,node2)
                     candidate = (node1,node2)
-                    print("replaced")
+
 
         #add the smallest distance to the graph
-        print("candidate is ")
-        print(candidate)
+
         connections.append(candidate)
         #remove node2 from unconnected
         unconnected.remove(candidate[1])
         connected.append(candidate[1])
-    print("connections ",connections)
+
 
     return connections
 

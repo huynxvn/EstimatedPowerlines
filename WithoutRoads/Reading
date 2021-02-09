@@ -73,4 +73,5 @@ for pointPair in connections:
 
         plt.plot(x_values, y_values,color = 'red')
 plt.plot(connections[0][0][0], connections[0][0][1], marker='^', markersize=8, color="green")
+
 plt.show()

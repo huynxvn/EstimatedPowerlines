@@ -1,0 +1,81 @@
+import triangle as tr
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+from WithoutRoads.GreatCircle import *
+from WithoutRoads.prims import *
+
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'area1.csv')
+
+
+array = np.genfromtxt(filename, delimiter=',')
+print(array)
+
+cdd = {'vertices': array}
+t = tr.triangulate(cdd,'q20')
+
+print(t)
+new_points = np.array([point for point in t['vertices'] if point not in array])
+
+pruned_added_points = []
+for splitter in new_points:
+    flag = False
+    for point in array:
+        if great_circle_distance(splitter,point)<10:
+            flag = True
+    if flag == False:
+        pruned_added_points.append(splitter)
+
+
+pruned_added_points =  np.array(pruned_added_points)
+connections = prims([tuple(i) for i in pruned_added_points])
+
+
+def nearestpoints(a,b):
+
+    '''
+    connects each point in a to its nearest point in b and returns a list containting tuples of coordinates
+    :param a:
+    :param b:
+    :return:
+    '''
+    result = []
+    for i in a:
+        min_dist = float('inf')
+        closest_point = ()
+        for j in b:
+
+            if min_dist > great_circle_distance(i,j):
+                closest_point = (i,j)
+                min_dist = great_circle_distance(i,j)
+        result.append(closest_point)
+    return result
+
+secondary_connections = nearestpoints([tuple(i) for i in array],[tuple(i) for i in pruned_added_points])
+
+for pointPair in connections:
+
+        point1 = pointPair[0]
+        point2 = pointPair[1]
+
+        x_values = [point1[0], point2[0]]
+        y_values = [point1[1], point2[1]]
+
+        plt.plot(x_values, y_values,color = 'red')
+
+for pointPair in secondary_connections:
+
+        point1 = pointPair[0]
+        point2 = pointPair[1]
+
+        x_values = [point1[0], point2[0]]
+        y_values = [point1[1], point2[1]]
+
+        plt.plot(x_values, y_values,color = 'red')
+plt.scatter(array[:,0],array[:,1])
+plt.scatter(pruned_added_points[:,0],pruned_added_points[:,1])
+
+plt.show()
